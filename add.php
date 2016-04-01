@@ -11,19 +11,19 @@
     <body>
         <h1>New Student</h1>
 
-        <form action="">
-            <input type="text" id="name_add" placeholder="Name">
-            <input type="text" id="lastname_add" placeholder="Lastname">
-            <input type="text" id="email_add" placeholder="Email">
-            <input type="text" id="number_add" placeholder="Cell Phone">
-            <input type="text" id="address_add" placeholder="Address">
-            <input type="text" id="postal_code" placeholder="Postal Code">
-            <select id="campus_select_add">
+
+            <input type="text" id="name_add" placeholder="Name" required="">
+            <input type="text" id="lastname_add" placeholder="Lastname" required="">
+            <input type="email" id="email_add" placeholder="Email" required="">
+            <input type="text" id="number_add" placeholder="Cell Phone" required="">
+            <input type="text" id="address_add" placeholder="Address" required="">
+            <input type="text" id="postal_code" placeholder="Postal Code" required="">
+            <select id="campus_select_add" >
                 <option value="Campus Ensenada">Campus Ensenada</option>
                 <option value="Campus Tijuana">Campus Tijuana</option>
                 <option value="Campus Mexicali">Campus Mexicali</option>
             </select>
-            <select id="career_select_add">               
+            <select id="career_select_add">
             </select>
             <select id="semester">
                 <option value="1">1 Semestre</option>
@@ -35,18 +35,13 @@
                 <option value="7">7 Semestre</option>
                 <option value="8">8 Semestre</option>
             </select>
-
-
-
             <select id="subject"  data-toggle="tooltip" title="Ctrl + Click to miltiple select" class="form-control" required="" name="subject" multiple></select>
             <input type="button" value="Agregar" onclick="submit()">
-        </form>
-
-
         <script>
             function submit() {
-
-                var student_number = Math.floor((Math.random() * 10000) + 1);
+console.log("Submit detected");
+               var student_number = Math.floor((Math.random() * 10000) + 1);
+               var subjects = $('#subject').val()
                 var formData = {
                     "name": $('#name_add').val(),
                     "last_name": $('#lastname_add').val(),
@@ -57,10 +52,12 @@
                     "email": $('#email_add').val(),
                     "cell_phone": $('#number_add').val(),
                     "student_number": student_number,
-                    "career": $('#career_select_add').val()
+                    "career": $('#career_select_add').val(),
+                    "array": subjects.join()
+
                 };
                 console.log(formData);
-             /*   $.ajax({
+               $.ajax({
                     url: "http://localhost/School/api/newstudent",
                     type: 'POST',
                     data: JSON.stringify(formData),
@@ -71,9 +68,9 @@
                     console.log(data);
                 }).fail(function (data) {
                     console.log(data);
-                });*/
+                });
             }
-           
+
             $(document).ready(function () {
                 $("#subject").hide();
             });
@@ -107,9 +104,9 @@
                     });
                 });
             });
-            
-            
-            
+
+
+
 
 
         </script>

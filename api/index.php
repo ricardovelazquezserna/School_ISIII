@@ -5,23 +5,23 @@ require 'Slim/Slim.php';
 $app = new \Slim\Slim();
 $app->contentType('application/json');
 $app->get('/getcareers(/)', function() {
-    require 'projects/school/functions.php';    
-    $result = getcareers();    
+    require 'projects/school/functions.php';
+    $result = getcareers();
     echo $result;
 });
 $app->get('/getsubjects(/)', function() {
-    require 'projects/school/functions.php';    
-    $result = getsubjects();    
+    require 'projects/school/functions.php';
+    $result = getsubjects();
     echo $result;
 });
 $app->post('/newstudent(/)', function() {
-    require 'projects/school/functions.php';    
-    $result = newstudent();    
+    require 'projects/school/functions.php';
+    $result = newstudent();
     echo $result;
 });
-$app->get('/getsubjectssearch(/)', function() {
-    require 'projects/school/functions.php';    
-    $result = getsubjectssearch();    
+$app->get('/getsubjectsearch(/)', function() {
+    require 'projects/school/functions.php';
+    $result = getsubjectsearch();    
     echo $result;
 });/*
 $app->post('/ligarValores(/)',function(){

@@ -10,7 +10,7 @@ function getcareers() {
             SELECT
                 id,name
             FROM
-                career                
+                career
         ";
     try {
         $db = getConnection();
@@ -38,11 +38,10 @@ function getsubjects() {
     $idc = $_GET['idc'];
     $ns = $_GET['ns'];
 
-    
-    $sql = "SELECT s.name FROM career c INNER JOIN career_subject cs ON c.id=cs.id_career INNER JOIN subject s ON cs.id_subject=s.id WHERE s.semester= ".$ns." AND c.id=".$idc."";
+
+    $sql = "SELECT s.name,s.id FROM career c INNER JOIN career_subject cs ON c.id=cs.id_career INNER JOIN subject s ON cs.id_subject=s.id WHERE s.semester= ".$ns." AND c.id=".$idc."";
   try {
         $db = getConnection();
-       
         $stmt = $db->prepare($sql);
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_CLASS);
@@ -62,10 +61,8 @@ function getsubjects() {
 }
 
 function newstudent() {
-
     $request = \Slim\Slim::getInstance()->request();
     $payload = json_decode($request->getBody());
-
     $sql = "
         INSERT INTO student (
             name,
@@ -77,7 +74,6 @@ function newstudent() {
             email,
             cell_phone,
             student_number
-            
         ) VALUES (
             :name,
             :last_name,
@@ -90,14 +86,21 @@ function newstudent() {
             :student_number
         );";
 
-    $query_insert = "
+    $query_insert_student_career = "
         INSERT INTO student_career (
-            id_student,id_career
+            id_student,
+            id_career
         ) VALUES (
             :id_student,
-            :id_career);";
-
-
+           :id_career);";
+    $query_insert_student_subject = "
+        INSERT INTO student_subject (
+            id_student,
+            id_subject
+        ) VALUES (
+            :id_student,
+            :id_subject
+            );";
 
     try {
         $db = getConnection();
@@ -112,17 +115,26 @@ function newstudent() {
         $stmt->bindParam("cell_phone", $payload->cell_phone);
         $stmt->bindParam("student_number", $payload->student_number);
         $stmt->execute();
-        
+
         $newstudentid = $db->lastInsertId();
         $id_career_selected = intval($payload->career);
-       
-        $stmt = $db->prepare($query_insert);
-        $stmt->bindParam("id_student", $newstudentid);
-        $stmt->bindParam("id_career", $id_career_selected);
-        $stmt->execute();
-       
+        $id_subjects = explode(",",  $payload->array);
+
+        foreach ($id_subjects as $key ) {
+          $stmt = $db->prepare($query_insert_student_subject);
+          $stmt->bindParam("id_student", $newstudentid);
+          $stmt->bindParam("id_subject", $key);
+          $stmt->execute();
+        }
+
+
+
+
+
         $response = array(
             "id " => $newstudentid,
+            "id career" => $id_career_selected,
+            "ids" => $id_subjects,
             "success" => "ok");
     } catch (PDOException $e) {
         $response = array(
@@ -138,7 +150,7 @@ function getsubjectsearch(){
             SELECT
                 id,name
             FROM
-                subject                
+                subject
         ";
     try {
         $db = getConnection();
@@ -158,7 +170,7 @@ function getsubjectsearch(){
         );
     }
     return json_encode($response);
-    
+
 }
 function search() {
 
@@ -176,7 +188,7 @@ function search() {
             email,
             cell_phone,
             student_number
-            
+
         ) VALUES (
             :name,
             :last_name,
@@ -211,15 +223,15 @@ function search() {
         $stmt->bindParam("cell_phone", $payload->cell_phone);
         $stmt->bindParam("student_number", $payload->student_number);
         $stmt->execute();
-        
+
         $newstudentid = $db->lastInsertId();
         $id_career_selected = intval($payload->career);
-       
+
         $stmt = $db->prepare($query_insert);
         $stmt->bindParam("id_student", $newstudentid);
         $stmt->bindParam("id_career", $id_career_selected);
         $stmt->execute();
-       
+
         $response = array(
             "id " => $newstudentid,
             "success" => "ok");
@@ -228,10 +240,10 @@ function search() {
             "error" => $e->getmessage()
         );
     }
-    
 
 
-   
+
+
 
     return json_encode($response);
 }
@@ -241,8 +253,8 @@ function ligarValores() {
     $request = \Slim\Slim::getInstance()->request();
     $payload = json_decode($request->getBody());
     $array_string = $payload->arreglo;
-    $my_array = explode(',', $array_string); 
-    
+    $my_array = explode(',', $array_string);
+
     $sql = "
         INSERT INTO proced_depart(
             id_pdt,
@@ -261,7 +273,7 @@ function ligarValores() {
         }
         $response = array(
             "success" => "OK",
-            
+
         );
     } catch (PDOException $e) {
         $response = array(
@@ -277,7 +289,7 @@ function selectDpt() {
                 *
             FROM
                 departamento
-                    
+
         ";
 
     try {
@@ -307,7 +319,7 @@ function selectPdt() {
             SELECT
                *
             FROM
-                procedimiento           
+                procedimiento
         ";
     try {
 
@@ -330,4 +342,3 @@ function selectPdt() {
     }
     return json_encode($response);
 }*/
-

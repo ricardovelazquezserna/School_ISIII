@@ -9,16 +9,16 @@
         <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     </head>
     <body>
-        
+
         <h2>Search by:</h2>
         </select>
         <input type="text" id="search_name" name="name" placeholder="Name">
         <input type="text" id="student_number_search" name="student_number" placeholder="Student number">
-        <select id="semester">          
+        <select id="semester">
             <option value="1">1 Semestre</option>
             <option value="2">2 Semestre</option>
             <option value="3">3 Semestre</option>
-            <option value="4">4 Semestre</option> 
+            <option value="4">4 Semestre</option>
             <option value="5">5 Semestre</option>
             <option value="6">6 Semestre</option>
             <option value="7">7 Semestre</option>
@@ -34,7 +34,7 @@
                     "name": $('#search').val(),
                     "semester": $('#semester').val(),
                     "subject": $('#subject').val(),
-                   
+
                 };
                 console.log(formData);
                 $.ajax({
@@ -49,8 +49,8 @@
                     console.log(data);
                 });
             }
-            
-              
+
+
             $.get('http://localhost/School/api/getcareers', function (data) {
                 var html_code = '<option value="id">career</option>';
                 $.each(data, function (i, career) {
@@ -62,10 +62,10 @@
             });
              $.get('http://localhost/School/api/getsubjectsearch', function (data) {
                 var html_code = '<option value="id">subject</option>';
-                $.each(data, function (i, career) {
+                $.each(data, function (i, subject) {
                     var current_html = html_code;
-                    current_html = current_html.replace("id", career['id']);
-                    current_html = current_html.replace("subject", career['name']);
+                    current_html = current_html.replace("id", subject['id']);
+                    current_html = current_html.replace("subject", subject['name']);
                     $('#subject').append(current_html);
                 });
             });
