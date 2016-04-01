@@ -1,8 +1,6 @@
 <?php
 
-// Get database config
 require_once 'database.php';
-
 function getcareers() {
     $request = \Slim\Slim::getInstance()->request();
     $payload = json_decode($request->getBody());
@@ -32,15 +30,16 @@ function getcareers() {
     return json_encode($response);
 }
 
-function getsubjects() {
+function getstudentnumber() {
     $request = \Slim\Slim::getInstance()->request();
     $payload = json_decode($request->getBody());
-    $idc = $_GET['idc'];
-    $ns = $_GET['ns'];
-
-
-    $sql = "SELECT s.name,s.id FROM career c INNER JOIN career_subject cs ON c.id=cs.id_career INNER JOIN subject s ON cs.id_subject=s.id WHERE s.semester= ".$ns." AND c.id=".$idc."";
-  try {
+    $sql = "
+            SELECT
+                id,student_number
+            FROM
+                student
+        ";
+    try {
         $db = getConnection();
         $stmt = $db->prepare($sql);
         $stmt->execute();
@@ -50,6 +49,70 @@ function getsubjects() {
         } else {
             $response = array(
                 "error" => 'No rows found'
+            );
+        }
+    } catch (PDOException $e) {
+        $response = array(
+            "error" => $e->getMessage()
+        );
+    }
+    return json_encode($response);
+}
+
+function getnamestudents() {
+    $request = \Slim\Slim::getInstance()->request();
+    $payload = json_decode($request->getBody());
+    $sql = "
+            SELECT
+                id,CONCAT(name,' ',last_name) AS name
+            FROM
+                student
+        ";
+    try {
+        $db = getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_CLASS);
+        if (count($result)) {
+            $response = $result;
+        } else {
+            $response = array(
+                "error" => 'Students not found'
+            );
+        }
+    } catch (PDOException $e) {
+        $response = array(
+            "error" => $e->getMessage()
+        );
+    }
+    return json_encode($response);
+}
+
+
+function getsubjects() {
+    $request = \Slim\Slim::getInstance()->request();
+    $payload = json_decode($request->getBody());
+    $idc = $_GET['idc'];
+    $ns = $_GET['ns'];
+    $sql = "
+    SELECT s.name,s.id
+    FROM career c
+    INNER JOIN career_subject cs
+      ON c.id=cs.id_career
+    INNER JOIN subject s
+      ON cs.id_subject=s.id
+    WHERE s.semester= ".$ns."
+      AND c.id=".$idc."";
+  try {
+        $db = getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_CLASS);
+        if (count($result)) {
+            $response = $result;
+        } else {
+            $response = array(
+                "error" => 'Subjects not found'
             );
      }
     } catch (PDOException $e) {
@@ -207,9 +270,6 @@ function search() {
         ) VALUES (
             :id_student,
             :id_career);";
-
-
-
     try {
         $db = getConnection();
         $stmt = $db->prepare($sql);
@@ -240,105 +300,5 @@ function search() {
             "error" => $e->getmessage()
         );
     }
-
-
-
-
-
     return json_encode($response);
 }
-
-/*
-function ligarValores() {
-    $request = \Slim\Slim::getInstance()->request();
-    $payload = json_decode($request->getBody());
-    $array_string = $payload->arreglo;
-    $my_array = explode(',', $array_string);
-
-    $sql = "
-        INSERT INTO proced_depart(
-            id_pdt,
-            id_dpt
-          ) VALUES (
-            :id_procedimiento,
-            :id_departamento
-           );";
-    try {
-        $db = getConnection();
-        foreach ($my_array as $value) {
-            $stmt = $db->prepare($sql);
-            $stmt->bindParam("id_procedimiento", $payload->cookie);
-            $stmt->bindParam("id_departamento", $value);
-            $stmt->execute();
-        }
-        $response = array(
-            "success" => "OK",
-
-        );
-    } catch (PDOException $e) {
-        $response = array(
-            "error" => $payload
-        );
-    }
-    return json_encode($response);
-}
-function selectDpt() {
-
-    $sql = "
-            SELECT
-                *
-            FROM
-                departamento
-
-        ";
-
-    try {
-
-        $db = getConnection();
-        $stmt = $db->prepare($sql);
-        $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_CLASS);
-
-        if (count($result)) {
-            $response = $result;
-        } else {
-            $response = array(
-                "error" => 'No rows found'
-            );
-        }
-    } catch (PDOException $e) {
-        $response = array(
-            "error" => $e->getMessage()
-        );
-    }
-
-    return json_encode($response);
-}
-function selectPdt() {
-    $sql = "
-            SELECT
-               *
-            FROM
-                procedimiento
-        ";
-    try {
-
-        $db = getConnection();
-        $stmt = $db->prepare($sql);
-        $stmt->execute();
-        $result = $stmt->fetchAll(PDO::FETCH_CLASS);
-
-        if (count($result)) {
-            $response = $result;
-        } else {
-            $response = array(
-                "error" => 'No rows found'
-            );
-        }
-    } catch (PDOException $e) {
-        $response = array(
-            "error" => $e->getMessage()
-        );
-    }
-    return json_encode($response);
-}*/

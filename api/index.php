@@ -21,9 +21,24 @@ $app->post('/newstudent(/)', function() {
 });
 $app->get('/getsubjectsearch(/)', function() {
     require 'projects/school/functions.php';
-    $result = getsubjectsearch();    
+    $result = getsubjectsearch();
     echo $result;
-});/*
+});
+
+$app->get('/getstudentnumber(/)', function() {
+    require 'projects/school/functions.php';
+    $result = getstudentnumber();
+    echo $result;
+});
+
+$app->get('/getnamestudents(/)', function() {
+    require 'projects/school/functions.php';
+    $result = getnamestudents();
+    echo $result;
+});
+
+
+/*
 $app->post('/ligarValores(/)',function(){
 require 'project/procedimientos/functions.php';
 $result = ligarValores();

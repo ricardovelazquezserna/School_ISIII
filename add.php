@@ -10,8 +10,6 @@
     </head>
     <body>
         <h1>New Student</h1>
-
-
             <input type="text" id="name_add" placeholder="Name" required="">
             <input type="text" id="lastname_add" placeholder="Lastname" required="">
             <input type="email" id="email_add" placeholder="Email" required="">
@@ -19,13 +17,16 @@
             <input type="text" id="address_add" placeholder="Address" required="">
             <input type="text" id="postal_code" placeholder="Postal Code" required="">
             <select id="campus_select_add" >
+               <option value="" disabled selected>Select campus</option>
                 <option value="Campus Ensenada">Campus Ensenada</option>
                 <option value="Campus Tijuana">Campus Tijuana</option>
                 <option value="Campus Mexicali">Campus Mexicali</option>
             </select>
             <select id="career_select_add">
+               <option value="" disabled selected>Select career</option>
             </select>
             <select id="semester">
+               <option value="" disabled selected>Select semester</option>
                 <option value="1">1 Semestre</option>
                 <option value="2">2 Semestre</option>
                 <option value="3">3 Semestre</option>
@@ -36,7 +37,7 @@
                 <option value="8">8 Semestre</option>
             </select>
             <select id="subject"  data-toggle="tooltip" title="Ctrl + Click to miltiple select" class="form-control" required="" name="subject" multiple></select>
-            <input type="button" value="Agregar" onclick="submit()">
+            <input type="button" value="Add" onclick="submit()">
         <script>
             function submit() {
 console.log("Submit detected");
