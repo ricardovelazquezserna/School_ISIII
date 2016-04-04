@@ -40,10 +40,11 @@
         <script>
                 function search(){
                 var formData = {
-                    "student_number": $('#student_number').val(),
-                    "name": $('#search').val(),
+                    "name": $('#name_student_select').val(),
+                    "number": $('#student_number_select').val(),
                     "semester": $('#semester').val(),
-                    "subject": $('#subject').val(),
+                    "career": $('#career').val(),
+                    "subject": $('#subject').val()
 
                 };
                 console.log(formData);

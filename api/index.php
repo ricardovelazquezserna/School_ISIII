@@ -36,6 +36,17 @@ $app->get('/getnamestudents(/)', function() {
     $result = getnamestudents();
     echo $result;
 });
+$app->post('/newuser(/)', function() {
+    require 'projects/school/functions.php';
+    $result = newuser();
+    echo $result;
+});
+
+$app->get('/getuser(/)', function() {
+    require 'projects/school/functions.php';
+    $result = getuser();
+    echo $result;
+});
 
 
 /*

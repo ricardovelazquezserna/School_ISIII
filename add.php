@@ -87,8 +87,12 @@ console.log("Submit detected");
             $(document).ready(function () {
                 $('[data-toggle="tooltip"]').tooltip();
             });
+            $( "#semester" ).focus(function() {
+
+              });
             $(document).ready(function () {
-                $("#semester").focusout(function () {
+                $("#semester").change(function () {
+
                     var idc = $("#career_select_add").val();
                     var ns = $("#semester").val();
                     console.log(idc,ns);

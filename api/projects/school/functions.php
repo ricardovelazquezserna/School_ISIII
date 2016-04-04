@@ -1,5 +1,4 @@
 <?php
-
 require_once 'database.php';
 function getcareers() {
     $request = \Slim\Slim::getInstance()->request();
@@ -189,11 +188,6 @@ function newstudent() {
           $stmt->bindParam("id_subject", $key);
           $stmt->execute();
         }
-
-
-
-
-
         $response = array(
             "id " => $newstudentid,
             "id career" => $id_career_selected,
@@ -233,71 +227,69 @@ function getsubjectsearch(){
         );
     }
     return json_encode($response);
-
 }
-function search() {
 
+function newuser() {
     $request = \Slim\Slim::getInstance()->request();
     $payload = json_decode($request->getBody());
-
     $sql = "
-        INSERT INTO student (
+        INSERT INTO user (
             name,
             last_name,
-            semester,
-            campus,
-            address,
-            postal_code,
             email,
-            cell_phone,
-            student_number
-
+            password
         ) VALUES (
             :name,
             :last_name,
-            :semester,
-            :campus,
-            :address,
-            :postal_code,
             :email,
-            :cell_phone,
-            :student_number
+            :password
         );";
-
-    $query_insert = "
-        INSERT INTO student_career (
-            id_student,id_career
-        ) VALUES (
-            :id_student,
-            :id_career);";
     try {
         $db = getConnection();
         $stmt = $db->prepare($sql);
         $stmt->bindParam("name", $payload->name);
         $stmt->bindParam("last_name", $payload->last_name);
-        $stmt->bindParam("semester", $payload->semester);
-        $stmt->bindParam("campus", $payload->campus);
-        $stmt->bindParam("address", $payload->address);
-        $stmt->bindParam("postal_code", $payload->postal_code);
         $stmt->bindParam("email", $payload->email);
-        $stmt->bindParam("cell_phone", $payload->cell_phone);
-        $stmt->bindParam("student_number", $payload->student_number);
+        $stmt->bindParam("password", $payload->password);
         $stmt->execute();
-
-        $newstudentid = $db->lastInsertId();
-        $id_career_selected = intval($payload->career);
-
-        $stmt = $db->prepare($query_insert);
-        $stmt->bindParam("id_student", $newstudentid);
-        $stmt->bindParam("id_career", $id_career_selected);
-        $stmt->execute();
-
         $response = array(
-            "id " => $newstudentid,
             "success" => "ok");
     } catch (PDOException $e) {
         $response = array(
             "error" => $e->getmessage()
+        );
+    }
+     return json_encode($response);
+}
+
+function getuser(){
+     $request = \Slim\Slim::getInstance()->request();
+    $payload = json_decode($request->getBody());
+    $email = $_GET['user'];
+    $password = $_GET['password'];
+    $sql = "
+            SELECT
+                email,password
+            FROM
+                user
+                WHERE email= ".$email."
+                  AND password=".$password."
+        ";
+    try {
+        $db = getConnection();
+        $stmt = $db->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_CLASS);
+        if (count($result)) {
+            $response = $result;
+        } else {
+            $response = array(
+                "error" => 'No rows found'
+            );
+        }
+    } catch (PDOException $e) {
+        $response = array(
+            "error" => $e->getMessage()
         );
     }
     return json_encode($response);
