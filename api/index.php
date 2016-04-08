@@ -47,6 +47,11 @@ $app->get('/getuser(/)', function() {
     $result = getuser();
     echo $result;
 });
+$app->get('/getsearch(/)', function() {
+    require 'projects/school/search_function.php';
+    $result = getsearch();
+    echo $result;
+});
 
 
 /*

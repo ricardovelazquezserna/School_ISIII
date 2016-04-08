@@ -31,41 +31,54 @@
             <option value="8">8 Semestre</option>
         </select>
         <select id="career">
- <option value="" disabled selected>Select career</option>
+            <option value="" disabled selected>Select career</option>
         </select>
-          <select id="subject">
- <option value="" disabled selected>Select subject</option>
-          </select>
+        <select id="subject">
+            <option value="" disabled selected>Select subject</option>
+        </select>
+          <input type="button" value="Search" onclick="search()">
+
+          <table id="table_for_results" display>
+            <tr>
+               <th>Firstname</th>
+               <th>Lastname</th>
+               <th>Student number</th>
+               <th>Semester </th>
+               <th>Campus</th>
+               <th>Career</th>
+             </tr>
+
+</table>
+
+
 
         <script>
                 function search(){
-                var formData = {
-                    "name": $('#name_student_select').val(),
-                    "number": $('#student_number_select').val(),
-                    "semester": $('#semester').val(),
-                    "career": $('#career').val(),
-                    "subject": $('#subject').val()
+                  var id = $('#name_student_select').val();
+                  var number = $('#student_number_select').val();
+                  var semester = $('#semester').val();
+                  var career = $('#career').val();
+                  var subject = $('#subject').val();
+                  $.get('http://localhost/School/api/getsearch',{id,number,semester,career,subject}, function (data) {
+                          var html_code = '<th><td>name lastname number semester campus career</td></th>';
+                          $.each(data, function (i, student) {
+                              var current_html = html_code;
+                              current_html = current_html.replace("name", student['name']);
+                              current_html = current_html.replace("lastname", student['last_name']);
+                              $('#student_number_select').append(current_html);
+                          });
+                    });
+                    console.log(data);
+                      
 
-                };
-                console.log(formData);
-                $.ajax({
-                    url: "http://localhost/School/api/search",
-                    type: 'POST',
-                    data: JSON.stringify(formData),
-                    dataType: 'json',
-                    encode: true
-                }).done(function (data) {
-                    console.log(data);
-                }).fail(function (data) {
-                    console.log(data);
-                });
+
             }
 
             $.get('http://localhost/School/api/getstudentnumber', function (data) {
-                var html_code = '<option value="id">number</option>';
+                var html_code = '<option value="number">number</option>';
                 $.each(data, function (i, number) {
                     var current_html = html_code;
-                    current_html = current_html.replace("id", number['id']);
+                    current_html = current_html.replace("number", number['student_number']);
                     current_html = current_html.replace("number", number['student_number']);
                     $('#student_number_select').append(current_html);
                 });
